@@ -2,6 +2,10 @@
 
 declare(strict_types = 1);
 
+namespace rark\simple_clone\utils;
+
+use pocketmine\math\Vector3;
+
 
 final class Utility{
 

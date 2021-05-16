@@ -2,6 +2,18 @@
 
 declare(strict_types = 1);
 
+namespace rark\simple_clone\utils;
+
+use pocketmine\level\{
+	Level,
+	particle\Particle
+};
+use pocketmine\utils\{
+	Config,
+	UUID
+};
+use pocketmine\math\Vector3;
+
 
 class Structure{
 	private static array $structures = [];
