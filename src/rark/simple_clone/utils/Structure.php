@@ -14,10 +14,33 @@ class Structure{
 		$this->v2 = new Vector3;
 	}
 
-	public function load(string $dir, string $file):void{
+	public function load(string $dir, string $file):bool{
+		$path = $dir.'/'.$file;
+		if(!file_exists($path)) return false;
+		$conf = new Config($path, Config::JSON);
+		$blocks = [];
+
+		foreach($conf->getAll() as $str_diff => $str_block){
+			$dat = explode('&&&', $str_block);
+
+			if(count($dat)!==2) return false;
+			$block = Block::get($dat[0]);
+			$block->setDamage($dat[1]);
+			$blocks[$str_diff] = $block;
+		}
+		$this->blocks = $blocks;
+		return true;
 	}
 
-	public function save(string $dir, ?string $name = null):void{
+	public function save(string $dir, ?string $file = null):void{
+		$file = $file===null? UUID::fromRandom()->toString(): $file;
+		$path = $dir.'/'.$file;
+		$conf = new Config($path, Config::JSON);
+
+		foreach($this->blocks as $str_diff => $block){
+			$conf->set($str_diff, $block->getId().'&&&'.$block->getDamage());
+		}
+		$conf->save();
 	}
 
 	public function copy(Level $level):void{

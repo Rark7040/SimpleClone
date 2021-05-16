@@ -29,9 +29,9 @@ final class Utility{
 		return $v->x.'???'.$v->y.'???'.$v->z;
 	}
 
-	public static function unserializeVector(string $str):Vector3{
+	public static function unserializeVector(string $str):?Vector3{
 		$dat = explode('???', $str);
-		if(count($dat)!==3) throw new \ErrorException('有効ではない文字列');
+		if(count($dat)!==3) return null;
 		return new Vector3((float)$dat[0], (float)$dat[1], (float)$dat[2]);
 	}
 }
