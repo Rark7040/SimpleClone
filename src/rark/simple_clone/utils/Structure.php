@@ -17,22 +17,66 @@ use pocketmine\math\Vector3;
 
 class Structure{
 	private static array $structures = [];
+	protected bool $useable = false;
 	protected array $blocks = [];
+	protected string $name;
+	protected string $id;
+	/** @var pocketmine\math\Vector3 min vector */
 	protected $v1;
+	/** @var pocketmine\math\Vector3 max vector */
 	protected $v2;
 
-	public function __construct(){
+	public function __construct(string $name){
+		$this->name = $name;
+		$this->id = UUID::fromRandom()->toString();
 		$this->v1 = new Vector3;
 		$this->v2 = new Vector3;
 	}
 
-	public function load(string $dir, string $file):bool{
-		$path = $dir.'/'.$file;
-		if(!file_exists($path)) return false;
+	/**
+	 * ストラクチャが使用可能か検証します
+	 * @return bool
+	 */
+	public function init():bool{
+		$this->usable = !isset(self::$structures[$this->name]) or self::$structures[$this->name]->getId()!==$this->id;
+		return $this->usable;
+	}
+
+	/**
+	 * 使用可能なストラクチャのオブジェクトを返します
+	 * @return self[]
+	 */
+	public static function getStructures():array{
+		return self::$structures;
+	}
+
+	/**
+	 * ストラクチャ名を返します
+	 */
+	public function getName():string{
+		return $this->name;
+	}
+
+	/**
+	 * UUIDを返します
+	 */
+	public function getId():string{
+		return $this->id;
+	}
+
+	/**
+	 * テキストアーカイブからストラクチャのオブジェクトを抽出します
+	 * また、その抽出されたデータはこのクラスのインスタンスを上書きします
+	 * @return bool <true=success|false=failed>
+	 */
+	public function load(string $file):bool{
+		$path = Main::getDataPath().$file;
+
+		if(!file_exists($path) or strrchr($file, '.')==='.scstr';) return false;
 		$conf = new Config($path, Config::JSON);
 		$blocks = [];
 
-		foreach($conf->getAll() as $str_diff => $str_block){
+		foreach($conf->get() as $str_diff => $str_block){
 			$dat = explode('&&&', $str_block);
 
 			if(count($dat)!==2) return false;
@@ -44,10 +88,14 @@ class Structure{
 		return true;
 	}
 
-	public function save(string $dir, ?string $file = null):void{
-		$file = $file===null? UUID::fromRandom()->toString(): $file;
-		$path = $dir.'/'.$file;
+	/**
+	 * 現在のインスタンスをテキストアーカイブとしてプラグインのデータフォルダに保存します
+	 */
+	public function save():void{
+		$path = Main::getDataPath().$this->name.$this->id.'.scstr';
 		$conf = new Config($path, Config::JSON);
+		$conf->set('name', $this->name);
+		$conf->set('id', $this->id);
 
 		foreach($this->blocks as $str_diff => $block){
 			$conf->set($str_diff, $block->getId().'&&&'.$block->getDamage());
@@ -55,7 +103,12 @@ class Structure{
 		$conf->save();
 	}
 
-	public function copy(Level $level):void{
+	/**
+	 * メンバ変数v1、v2に格納されているVector3の範囲内のブロックデータを取得します
+	 * @return bool <true=success|false=failed>
+	 */
+	public function copy(Level $level):bool{
+		if(!$this->v1 instanceof Vector3 or !$this->v2 instanceof Vector3) return false;
 		for($x = $this->v2->x-$this->v1->x; $x>=0; --$x){
 			for($y = $this->v2->y-$this->v1->y; $y>=0; --$y){
 				for($z = $this->v2->z-$this->v1->z; $z>=0; --$z){
@@ -64,8 +117,12 @@ class Structure{
 				}
 			}
 		}
+		return true;
 	}
 
+	/**
+	 * メンバ変数、v1、v2にVector3を格納します
+	 */
 	public function resize(?Vector3 $v1 = null, ?Vector3 $v2 = null):void{
 		$v1 = $v1===null? $this->v1: $v1;
 		$v2 = $v2===null? $this->v2: $v2;
@@ -74,6 +131,9 @@ class Structure{
 		$this->v2 = $v2;
 	}
 
+	/**
+	 * メンバ変数、v1、v2の範囲をパーティクルで表示します
+	 */
 	public function showOutLine(Level $level, Particle $particle):void{
 		$xv1 = new Vector3($this->v1->x, $this->v1->y, $this->v2->z);
 		$xv2 = new Vector3($this->v1->x, $this->v2->y, $this->v1->z);
