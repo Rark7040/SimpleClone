@@ -1,0 +1,4 @@
+name: SimpleClone
+version: 1.0.0
+api: 3.19.0
+main: rark\simple_clone\Main
