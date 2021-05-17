@@ -66,7 +66,7 @@ class Structure{
 		}
 	}
 
-	public function resize(?Vector3 $v1, ?Vector3 $v2):void{
+	public function resize(?Vector3 $v1 = null, ?Vector3 $v2 = null):void{
 		$v1 = $v1===null? $this->v1: $v1;
 		$v2 = $v2===null? $this->v2: $v2;
 		Utility::sortVector($v1, $v2);

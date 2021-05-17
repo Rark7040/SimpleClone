@@ -1,0 +1,5 @@
+projects:
+  TargetPlugin:
+    libs:
+      - src: CortexPE/Commando/Commando
+        version: 2.1.1
