@@ -13,6 +13,7 @@ use pocketmine\utils\{
 	UUID
 };
 use pocketmine\math\Vector3;
+use rark\simple_clone\Main;
 
 
 class Structure{
@@ -184,16 +185,30 @@ class Structure{
 	 */
 	public function paste(Player $player, Vector3 $v1, Level $level):void{
 		$v2 = $v1->add(self::getDiff($this->v1, $this->v2));
+		$dat = [];
 
 		for($x = $v2->x-$v1->x; $x>=0; --$x){
 			for($y = $v2->y-$v1->y; $y>=0; --$y){
 				for($z = $v2->z-$v1->z; $z>=0; --$z){
-					self::$history[$player->getName()] = $level->getBlock($v1->add($x, $y, $z));
+					$dat[] = $level->getBlock($v1->add($x, $y, $z));
 				}
 			}
 		}
+		array_unshift(self::$history[$player->getName()], $dat);
+
 		foreach($this->blocks as $str_diff => $block){
 			$level->setBlock($v1->add(self::unserializeVector($str_diff)), $block);
+		}
+	}
+
+	public static function redo(string $player_name, int $index):bool{
+		if(!isset(self::$history[$player_name]) or count(self::$history[$player_name])<$index) return false;
+		for($i = 0; $index!==0; --$index){
+			foreach(self::$history[$player_name][$i] as $block){
+				$block->getLevelNonNull()->setBlock($block, $block);
+			}
+			array_shift(self::$history[$player_name]);
+			++$i;
 		}
 	}
 }
