@@ -23,7 +23,7 @@ class Language{
 	}
 
 	public static function getLocale(string $locale_code):locale{
-		return isset(self::$langs[Locale::ID[$locale_code]])? self::$langs[Locale::ID[$locale_code]]: new Locale($locale_code);
+		return isset(self::$langs[Locale::ID[$locale_code]])? self::$langs[Locale::ID[$locale_code]]: null;
 	}
 
 	public static function translation(string $locale_code, string $text):string{

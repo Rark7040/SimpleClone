@@ -19,7 +19,8 @@ class Structure{
 
 	use Utility;
 
-	private static array $structures = [];
+	protected static array $structures = [];
+	protected static array $history = [];
 	protected bool $useable = false;
 	protected array $blocks = [];
 	protected string $name;
@@ -137,13 +138,14 @@ class Structure{
 	/**
 	 * メンバ変数、v1、v2の範囲をパーティクルで表示します
 	 */
-	public function showOutLine(Level $level, Particle $particle):void{
-		$xv1 = new Vector3($this->v1->x, $this->v1->y, $this->v2->z);
-		$xv2 = new Vector3($this->v1->x, $this->v2->y, $this->v1->z);
-		$yv1 = new Vector3($this->v1->x, $this->v1->y, $this->v2->z);
-		$yv2 = new Vector3($this->v2->x, $this->v2->y, $this->v1->z);
-		$zv1 = new Vector3($this->v1->x, $this->v2->y, $this->v1->z);
-		$zv2 = new Vector3($this->v2->x, $this->v1->y, $this->v1->z);
+	public function showOutLine(Vector3 $v1, Level $level, Particle $particle):void{
+		$v2 = $v1->add(self::getDiff($this->v1, $this->v2));
+		$xv1 = new Vector3($v1->x, $v1->y, $v2->z);
+		$xv2 = new Vector3($v1->x, $v2->y, $v1->z);
+		$yv1 = new Vector3($v1->x, $v1->y, $v2->z);
+		$yv2 = new Vector3($v2->x, $v2->y, $v1->z);
+		$zv1 = new Vector3($v1->x, $v2->y, $v1->z);
+		$zv2 = new Vector3($v2->x, $v1->y, $v1->z);
 		$add_particle = function(Vector3 $v1, Vector3 $v2, Vector3 $v3, Vector3 $v4) use($level, $particle):void{
 			$level->addParticle($particle->setComponents($v1->x, $v1->y, $v1->z));
 			$level->addParticle($particle->setComponents($v2->x, $v2->y, $v2->z));
@@ -177,5 +179,21 @@ class Structure{
 		}
 	}
 
-	public function paste(Vector3 $min_vector):void{}//todo
+	/**
+	 * v1を起点としてblocksにあるデータをもとにブロックを配置し、historyにもともとあったブロックを記録します
+	 */
+	public function paste(Player $player, Vector3 $v1, Level $level):void{
+		$v2 = $v1->add(self::getDiff($this->v1, $this->v2));
+
+		for($x = $v2->x-$v1->x; $x>=0; --$x){
+			for($y = $v2->y-$v1->y; $y>=0; --$y){
+				for($z = $v2->z-$v1->z; $z>=0; --$z){
+					self::$history[$player->getName()] = $level->getBlock($v1->add($x, $y, $z));
+				}
+			}
+		}
+		foreach($this->blocks as $str_diff => $block){
+			$level->setBlock($v1->add(self::unserializeVector($str_diff)), $block);
+		}
+	}
 }
