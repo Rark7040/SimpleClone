@@ -16,6 +16,9 @@ use pocketmine\math\Vector3;
 
 
 class Structure{
+
+	use Utility;
+
 	private static array $structures = [];
 	protected bool $useable = false;
 	protected array $blocks = [];
@@ -72,7 +75,7 @@ class Structure{
 	public function load(string $file):bool{
 		$path = Main::getDataPath().$file;
 
-		if(!file_exists($path) or strrchr($file, '.')==='.scstr';) return false;
+		if(!file_exists($path) or strrchr($file, '.')==='.scstr') return false;
 		$conf = new Config($path, Config::JSON);
 		$blocks = [];
 
@@ -113,7 +116,7 @@ class Structure{
 			for($y = $this->v2->y-$this->v1->y; $y>=0; --$y){
 				for($z = $this->v2->z-$this->v1->z; $z>=0; --$z){
 					$v = $this->v1->add($x, $y, $z);
-					$this->blocks[Utility::serializeVector(Utility::getDiff($v, $this->v1))] = $level->getBlock($v);
+					$this->blocks[self::serializeVector(self::getDiff($v, $this->v1))] = $level->getBlock($v);
 				}
 			}
 		}
@@ -126,7 +129,7 @@ class Structure{
 	public function resize(?Vector3 $v1 = null, ?Vector3 $v2 = null):void{
 		$v1 = $v1===null? $this->v1: $v1;
 		$v2 = $v2===null? $this->v2: $v2;
-		Utility::sortVector($v1, $v2);
+		self::sortVector($v1, $v2);
 		$this->v1 = $v1;
 		$this->v2 = $v2;
 	}
