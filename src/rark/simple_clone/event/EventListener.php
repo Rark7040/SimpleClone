@@ -11,14 +11,18 @@ use pocketmine\event\{
 	player\PlayerQuitEvent
 };
 
+
 final class EventListener implements Listener{
 
 	public function onBreakBlock(BlockBreakEvent $event):void{
+		handler\BlockBreakEventHandler::recive($event);
 	}
 
 	public function onBlockPlace(BlockPlaceEvent $event):void{
+		handler\BlockPlaceEventHandler::recive($event);
 	}
 
 	public function onQuitPlayer(PlayerQuitEvent $event):void{
+		handler\PlayerQuitEventHandler::recive($event);
 	}
 }

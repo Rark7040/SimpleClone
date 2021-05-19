@@ -8,5 +8,5 @@ use pocketmine\event\Event;
 
 
 interface Handler{
-	public function recive(Event $event):void;
+	public static function recive(Event $event):void;
 }
