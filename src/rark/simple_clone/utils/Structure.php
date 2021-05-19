@@ -41,17 +41,44 @@ class Structure{
 	 * ストラクチャが使用可能か検証します
 	 * @return bool
 	 */
-	public function init():bool{
-		$this->usable = !isset(self::$structures[$this->name]) or self::$structures[$this->name]->getId()!==$this->id;
+	public function init():void{
+		$this->usable = !isset(self::$structures[$this->name.$this->id]);
+	}
+
+	/**
+	 * ストラクチャが使用可能かを返します
+	 */
+	public function canUse():bool{
 		return $this->usable;
+	}
+
+	/**
+	 * 使用可能なストラクチャを登録します
+	 */
+	public static function register(self $structure):bool{
+		if(!$structure->canUse()) return false;
+		self::$structures[$structure->getName().$structure->getId()] = $structure;
+		return true;
 	}
 
 	/**
 	 * 使用可能なストラクチャのオブジェクトを返します
 	 * @return self[]
 	 */
-	public static function getStructures():array{
+	public static function getAllStructures():array{
 		return self::$structures;
+	}
+
+	/**
+	 *	登録されているストラクチャを取得し、$nameに一部でもストラクチャ名が一致したものを返します
+	 */
+	public static function get(string $name):array{
+		$structures = [];
+
+		foreach(array_keys(self::$structures) as $tag){
+			if(strchr($tag, $name) !== false) $structures[] = self::$structures[$tag];
+		}
+		return $structures;
 	}
 
 	/**
