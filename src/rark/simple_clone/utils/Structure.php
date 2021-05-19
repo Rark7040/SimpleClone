@@ -38,11 +38,9 @@ class Structure{
 		$this->usable = !isset(self::$structures[$this->name.$this->id]);
 	}
 
-	/**
-	 * ストラクチャが使用可能かを返します
-	 */
-	public function canUse():bool{
-		return $this->usable;
+	public static function get(string $name, string $id):?self{
+		if(!self::isRegistered($name, $id)) return null;
+		return self::$structures[$name.$id];
 	}
 
 	/**
@@ -52,6 +50,10 @@ class Structure{
 		if(!$structure->canUse()) return false;
 		self::$structures[$structure->getName().$structure->getId()] = $structure;
 		return true;
+	}
+
+	public static function isRegistered(string $name, string $id):bool{
+		return isset(self::$structures[$name.$id]);
 	}
 
 	/**
@@ -72,6 +74,13 @@ class Structure{
 			if(strchr($tag, $name) !== false) $structures[] = self::$structures[$tag];
 		}
 		return $structures;
+	}
+
+	/**
+	 * ストラクチャが使用可能かを返します
+	 */
+	public function canUse():bool{
+		return $this->usable;
 	}
 
 	/**

@@ -13,13 +13,11 @@ final class SimpleCloneCommand extends BaseCommand{
 
     protected function prepare():void{
         $this->setPermission('simpleclone.command.base.simpleclone');
-        $this->registerSubCommand(new CreateSubCommand);
-        $this->registerSubCommand(new UseSubCommand);
-        $this->registerSubCommand(new PasteSubCommand);
-        $this->registerSubCommand(new SubCommand);
-        $this->registerSubCommand(new UseSubCommand);
-        $this->registerSubCommand(new UseSubCommand);
-        $this->registerSubCommand(new UseSubCommand);
-        $this->registerSubCommand(new UseSubCommand);
+        $this->registerSubCommand(new CreateSubCommand); //ストラクチャを作成する
+        $this->registerSubCommand(new SaveSubCommand); //ストラクチャをアーカイブにする
+        $this->registerSubCommand(new LoadSubCommand); //アーカイブのストラクチャをキャッシュにロードする
+        $this->registerSubCommand(new UseSubCommand); //キャッシュ内にあるストラクチャをプレイヤーのクリップボードにコピーする
+        $this->registerSubCommand(new PasteSubCommand); //プレイヤーのクリップボードにあるストラクチャを設置する
+        $this->registerSubCommand(new ListSubCommand); //アーカイブ、もしくはキャッシュ内のストラクチャを表示する
     }
 }
