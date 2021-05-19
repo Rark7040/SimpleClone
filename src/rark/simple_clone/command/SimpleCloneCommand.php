@@ -13,6 +13,13 @@ final class SimpleCloneCommand extends BaseCommand{
 
     protected function prepare():void{
         $this->setPermission('simpleclone.command.base.simpleclone');
-        $this->registerSubCommand();
+        $this->registerSubCommand(new CreateSubCommand);
+        $this->registerSubCommand(new UseSubCommand);
+        $this->registerSubCommand(new PasteSubCommand);
+        $this->registerSubCommand(new SubCommand);
+        $this->registerSubCommand(new UseSubCommand);
+        $this->registerSubCommand(new UseSubCommand);
+        $this->registerSubCommand(new UseSubCommand);
+        $this->registerSubCommand(new UseSubCommand);
     }
 }

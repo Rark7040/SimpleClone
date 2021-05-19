@@ -35,13 +35,6 @@ class Structure{
 		$this->id = UUID::fromRandom()->toString();
 		$this->v1 = new Vector3;
 		$this->v2 = new Vector3;
-	}
-
-	/**
-	 * ストラクチャが使用可能か検証します
-	 * @return bool
-	 */
-	public function init():void{
 		$this->usable = !isset(self::$structures[$this->name.$this->id]);
 	}
 
