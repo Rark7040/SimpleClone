@@ -17,7 +17,6 @@ use rark\simple_clone\Main;
 
 
 class Structure{
-
 	use Utility;
 
 	protected static array $structures = [];
@@ -183,7 +182,7 @@ class Structure{
 	/**
 	 * v1を起点としてblocksにあるデータをもとにブロックを配置し、historyにもともとあったブロックを記録します
 	 */
-	public function paste(Player $player, Vector3 $v1, Level $level):void{
+	public function paste(string $executor, Vector3 $v1, Level $level):void{
 		$v2 = $v1->add(self::getDiff($this->v1, $this->v2));
 		$dat = [];
 
@@ -194,21 +193,32 @@ class Structure{
 				}
 			}
 		}
-		array_unshift(self::$history[$player->getName()], $dat);
+		array_unshift(self::$history[$executor], $dat);
 
 		foreach($this->blocks as $str_diff => $block){
 			$level->setBlock($v1->add(self::unserializeVector($str_diff)), $block);
 		}
 	}
 
-	public static function redo(string $player_name, int $index):bool{
-		if(!isset(self::$history[$player_name]) or count(self::$history[$player_name])<$index) return false;
+	/**
+	 * Historyにあるデータを元にブロックを復元します
+	 */
+	public static function redo(string $executor, int $index):bool{
+		if(!isset(self::$history[$executor]) or count(self::$history[$executor])<$index) return false;
 		for($i = 0; $index!==0; --$index){
-			foreach(self::$history[$player_name][$i] as $block){
+			foreach(self::$history[$executor][$i] as $block){
 				$block->getLevelNonNull()->setBlock($block, $block);
 			}
-			array_shift(self::$history[$player_name]);
+			array_shift(self::$history[$executor]);
 			++$i;
 		}
+		return true;
+	}
+
+	/**
+	 * 使用する必要がなくなったキャッシュをクリアします
+	 */
+	public static function refreshHistoryCash(string $executor):void{
+		unset(self::$history[$executor]);
 	}
 }

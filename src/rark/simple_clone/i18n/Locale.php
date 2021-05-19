@@ -14,6 +14,7 @@ class Locale extends Config implements LocaleIds{
 	/** @var pocketmine\utils\Config */
 	protected $conf;
 
+	/** 言語コードからインスタンスを生成します */
 	public function __construct(string $locale_code){
 		if(isset(self::ID[$locale_code])) throw new \ErrorException('invalid locale id');
 		$this->id = self::ID[$locale_code];
@@ -24,6 +25,7 @@ class Locale extends Config implements LocaleIds{
 		return $this->id;
 	}
 
+	/** textを翻訳したものを返します */
 	public function getTranslated(string $text):string{
 		return $this->conf->exists($text)? $this->conf->get($text); $text;
 	}
