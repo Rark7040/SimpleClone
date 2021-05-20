@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace rarl\simple_clone\utils;
+namespace rark\simple_clone\utils;
 
 use pocketmine\Player;
 
@@ -12,7 +12,7 @@ final class CreatingStructurePool{
 	 * プレイヤーがストラクチャを作成する際の、vector3データを保持するキャッシュです
 	 * @param
 	 * [
-	 * 		(string)player_name => [
+	 * 		(string)Player::getName() => [
 	 *   		Structure,
 	 *     		bool //v1を登録したか
 	 * 		]
@@ -27,22 +27,22 @@ final class CreatingStructurePool{
 	}
 
 	/**
-	 * Structureにvector3を格納させます。 v2を格納した場合はStructureのインスタンスを返します
+	 * Structureにvector3を格納させます。 v2を格納した場合はClipStoreにStructureのインスタンスをセーブします
 	 */
-	public static function set(Player $player, Vector3 $v, bool $bool):?Structure{
+	public static function set(Player $player, Vector3 $v, bool $bool):bool{
 		$name = $player->getName();
 		$dat = self::$data_holder[$name];
 		if($dat[1]){
 			$dat[0]->resize(null, $v);
-
-			if(!Structure::register($dat[0])) throw new \ErrorException('invalid structure instance');
 			self::remove($name);
-			return $dat[0];
+			if(!Structure::register($dat[0])) throw new \ErrorException('invalid structure');
+			ClipStore::set($player, $dat[0]);
+			return true;
 		}
 		$dat[0]->resize($v);
 		$dat[1] = true;
 		self::$data_holder[$name] = $dat;
-		return null;
+		return false;
 	}
 
 	/**

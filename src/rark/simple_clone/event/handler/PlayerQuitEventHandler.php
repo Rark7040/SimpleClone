@@ -19,6 +19,8 @@ final class PlayerQuitEventHandler implements Handler{
 	public static function recive(Event $event):void{
 		if(!$event instanceof PlayerQuitEvent) return;
 		if(!Main::getConfig()->get('quit.refresh')) return;
-		Structure::refreshHistoryCash($event->getPlayer()->getName());
+		$name = $event->getPlayer()->getName();
+		Structure::refreshHistoryCash($name);
+		CripStore::remove($name);
 	}
 }

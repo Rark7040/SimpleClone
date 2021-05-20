@@ -18,7 +18,7 @@ use rark\simple_clone\Main;
 
 class Structure{
 	use Utility;
-
+	/** @var self::$name.self::$id => self 未使用のストラクチャを格納します */
 	protected static array $structures = [];
 	protected static array $history = [];
 	protected bool $useable = false;
@@ -38,11 +38,6 @@ class Structure{
 		$this->usable = !isset(self::$structures[$this->name.$this->id]);
 	}
 
-	public static function get(string $name, string $id):?self{
-		if(!self::isRegistered($name, $id)) return null;
-		return self::$structures[$name.$id];
-	}
-
 	/**
 	 * 使用可能なストラクチャを登録します
 	 */
@@ -54,6 +49,10 @@ class Structure{
 
 	public static function isRegistered(string $name, string $id):bool{
 		return isset(self::$structures[$name.$id]);
+	}
+
+	public static function unregister(string $name, string $id):void{
+		unset(self::$structures[$name.$id]);
 	}
 
 	/**
@@ -74,6 +73,11 @@ class Structure{
 			if(strchr($tag, $name) !== false) $structures[] = self::$structures[$tag];
 		}
 		return $structures;
+	}
+
+	public static function getExact(string $name, string $id):?self{
+		if(!self::isRegistered($name, $id)) return null;
+		return self::$structures[$name.$id];
 	}
 
 	/**
