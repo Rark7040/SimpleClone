@@ -18,21 +18,14 @@ final class Main extends PluginBase{
 
 	public function onEnable(){
 		self::$data_path = $this->getDataFolder();
-		self::$conf = new Config(
-			self::$data_path.'config.yml',
-			Config::YAML,
-			[
-				'quit.refresh' => false
-			]
-		);
+		self::$conf = new Config(self::$data_path.'config.yml', Config::YAML,[
+			'default.lang' => 'ja_jp',
+			'quit.refresh' => false
+		]);
+		$this->registerLang();
 		$server = $this->getServer();
 		$server->getPluginManager()->registerEvents(new event\EventListener, $this);
-		$server->getCommandMap()->registerAll(
-			'rarks SimpleClone',
-			[
-
-			]
-		);
+		$server->getCommandMap()->register('rarks SimpleClone', new SimpleCloneCommand);
 	}
 
 	public static function getDataPath():string{
@@ -41,5 +34,10 @@ final class Main extends PluginBase{
 
 	public static function getConfig():Config{
 		return self::$conf;
+	}
+
+	private function registerLang():void{
+		Language::setDefault(self::$conf->get('default.lang'));
+		Language::registerText('command.send.must_in_game', 'ゲーム内で実行してください');
 	}
 }

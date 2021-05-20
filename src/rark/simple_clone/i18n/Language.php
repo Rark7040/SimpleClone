@@ -10,6 +10,7 @@ class Language{
 	protected static array $langs = [];
 	/** @var [string => string] */
 	protected static array $use_texts = [];
+	protected static string $default;
 
 	/** このクラスに登録されているテキストをlocaleに登録し、そのlocaleをこのクラスに登録します */
 	public static function register(locale $locale):void{
@@ -30,7 +31,16 @@ class Language{
 	}
 
 	/** 指定したlocale_codeでtextを翻訳します */
-	public static function translation(string $locale_code, string $text):string{
-		return isset(self::$langs[Locale::ID[$locale_code]])? self::$langs[Locale::ID[$locale_code]]->getTranslated(): $text;
+	public static function translation(?string $locale_code, string $text):string{
+		$locale_code?? $locale_code = self::$default;
+		if(isset(self::$langs[Locale::ID[$locale_code]])){
+			return self::$langs[Locale::ID[$locale_code]]->getTranslated();
+
+		} self::$langs[Locale::ID[$locale_code]]->getTranslated(): $text;
+	}
+
+	public static function setDefault(string $locale_code):void{
+		if(!isset(Locale::ID[$locale_code])) throw new \ErrorException('invaliid locale code');
+		self::$default = $locale_code;
 	}
 }
