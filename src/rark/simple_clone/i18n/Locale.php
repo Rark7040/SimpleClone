@@ -18,7 +18,7 @@ class Locale extends Config implements LocaleIds{
 	public function __construct(string $locale_code){
 		if(isset(self::ID[$locale_code])) throw new \ErrorException('invalid locale id');
 		$this->id = self::ID[$locale_code];
-		$this->conf = new Config(Main::getDataPath().'lang/'.$locale_code.'.yml', Config::YAML);
+		parent::__construct(Main::getDataPath().'lang/'.$locale_code.'.yml', Config::YAML);
 	}
 
 	public function getId():int{
@@ -27,6 +27,6 @@ class Locale extends Config implements LocaleIds{
 
 	/** textを翻訳したものを返します */
 	public function getTranslated(string $text):string{
-		return $this->conf->exists($text)? $this->conf->get($text); $text;
+		return $this->exists($text)? $this->get($text); $text;
 	}
 }

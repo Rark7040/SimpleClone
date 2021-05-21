@@ -37,7 +37,9 @@ final class Main extends PluginBase{
 	}
 
 	private function registerLang():void{
-		Language::setDefault(self::$conf->get('default.lang'));
-		Language::registerText('command.send.must_in_game', 'ゲーム内で実行してください');
+		LanguageHolder::setDefault(self::$conf->get('default.lang'));
+		LanguageHolder::registerText('command.send.must_in_game', 'ゲーム内で実行してください');
+		LanguageHolder::registerText('command.unknown.subcommand', 'そのサブコマンドは存在しません');
+		LanguageHolder::registerText('command.description.sub.create', 'ストラクチャーを生成します');
 	}
 }

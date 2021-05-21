@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace rark\simple_clone\i18n;
 
 
-class Language{
+class LanguageHolder{
 	/** @var [int => locale] */
 	protected static array $langs = [];
 	/** @var [string => string] */
@@ -42,5 +42,11 @@ class Language{
 	public static function setDefault(string $locale_code):void{
 		if(!isset(Locale::ID[$locale_code])) throw new \ErrorException('invaliid locale code');
 		self::$default = $locale_code;
+	}
+
+	public static function save():void{
+		foreach(self::$langs as $locale){
+			$locale->save();
+		}
 	}
 }
