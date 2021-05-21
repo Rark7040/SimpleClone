@@ -38,8 +38,10 @@ final class Main extends PluginBase{
 
 	private function registerLang():void{
 		LanguageHolder::setDefault(self::$conf->get('default.lang'));
-		LanguageHolder::registerText('command.send.must_in_game', 'ゲーム内で実行してください');
-		LanguageHolder::registerText('command.unknown.subcommand', 'そのサブコマンドは存在しません');
+		LanguageHolder::registerText('command.exception.send_must_in_game', 'ゲーム内で実行してください');
+		LanguageHolder::registerText('command.exception.unknown_subcommand', 'そのサブコマンドは存在しません');
 		LanguageHolder::registerText('command.description.sub.create', 'ストラクチャーを生成します');
+		LanguageHolder::registerText('command.exception.non_structure_name', 'ストラクチャー名が必要です');
+		LanguageHolder::registerText('command.success.registered_structure_pool', 'pos1とpos2を設定してください'."\n".'/sc create cancelで作成をキャンセルできます');
 	}
 }

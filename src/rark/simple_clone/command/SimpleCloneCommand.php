@@ -34,11 +34,11 @@ final class SimpleCloneCommand extends BaseCommand{
 
 	public function onRun(CommandSender $sender, string $command, array $args):void{
 		if(!$sender instanceof Player){
-			$sender->sendMessage(null, LanguageHolder::translation('command.send.must_in_game'));
+			$sender->sendMessage(null, LanguageHolder::translation('command.exception.send_must_in_game'));
 			return;
 
 		}elseif(isset($args['invalid'])){
-			$sender->sendMessage($sender->getLocale(), LanguageHolder::translation('command.unknown.subcommand'));
+			$sender->sendMessage($sender->getLocale(), LanguageHolder::translation('command.exception.unknown_subcommand'));
 			return;
 		}
 	}
