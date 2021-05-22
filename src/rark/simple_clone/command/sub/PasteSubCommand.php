@@ -7,11 +7,7 @@ namespace rark\simple_clone\command\sub;
 final class CreateSubCommand extends BaseSubCommand{
 
 	public function __construct(){
-		parent::__construct(
-			'paste',
-			LanguageHolder::translation('command.description.sub.create'),
-			['p']
-		);
+		parent::__construct('paste', LanguageHolder::translation('command.description.sub.create'), ['p']);
 	}
 
 	protected function prepare():void{}
@@ -24,3 +20,4 @@ final class CreateSubCommand extends BaseSubCommand{
 		$sender->sendForm(new PasteForm);
 	}
 }
+

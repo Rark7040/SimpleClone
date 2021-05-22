@@ -44,5 +44,6 @@ final class Main extends PluginBase{
 		LanguageHolder::registerText('command.success.registered_structure_pool', 'pos1とpos2を設定してください'."\n".'/sc create cancelで作成をキャンセルできます');
 		LanguageHolder::registerText('command.exception.no_selected_structure', 'クリップボードにストラクチャーが存在しません');
 		LanguageHolder::registerText('command.exception.invalid_structure_name', 'そのストラクチャー名は使用できません');
+		LanguageHolder::registerText('structure.load.success', 'ストラクチャーファイルをロードしました');
 	}
 }
