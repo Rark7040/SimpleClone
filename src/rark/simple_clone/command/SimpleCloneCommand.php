@@ -26,20 +26,12 @@ final class SimpleCloneCommand extends BaseCommand{
 		$this->registerSubCommand(new CreateSubCommand); //ストラクチャを作成する
 		$this->registerSubCommand(new SaveSubCommand); //ストラクチャをアーカイブにする
 		$this->registerSubCommand(new LoadSubCommand); //アーカイブのストラクチャをキャッシュにロードする
-		$this->registerSubCommand(new UseSubCommand); //キャッシュ内にあるストラクチャをプレイヤーのクリップボードにコピーする
-		$this->registerSubCommand(new PasteSubCommand); //プレイヤーのクリップボードにあるストラクチャを設置する toggle
+		$this->registerSubCommand(new PasteSubCommand); //プレイヤーのクリップボードにあるストラクチャを設置するかのモードを切り替える
 		$this->registerSubCommand(new ListSubCommand); //アーカイブ、もしくはキャッシュ内のストラクチャを表示する
-		$this->registerArgument(0, new RawStringArgument('invalid'));
+        $this->registerSubCommand(new RedoSubCommand); //pasteを巻き戻す
 	}
 
 	public function onRun(CommandSender $sender, string $command, array $args):void{
-		if(!$sender instanceof Player){
-			$sender->sendMessage(null, LanguageHolder::translation('command.exception.send_must_in_game'));
-			return;
-
-		}elseif(isset($args['invalid'])){
-			$sender->sendMessage($sender->getLocale(), LanguageHolder::translation('command.exception.unknown_subcommand'));
-			return;
-		}
+		//todo
 	}
 }

@@ -27,7 +27,7 @@ final class CreatingStructurePool{
 	}
 
 	/**
-	 * Structureにvector3を格納させます。 v2を格納した場合はClipStoreにStructureのインスタンスをセーブします
+	 * Structureにvector3を格納させます。v2を格納した際は、このpoolから削除され、Structure::$sutucturesに移動されます
 	 */
 	public static function set(Player $player, Vector3 $v, bool $bool):bool{
 		$name = $player->getName();
@@ -36,7 +36,6 @@ final class CreatingStructurePool{
 			$dat[0]->resize(null, $v);
 			self::remove($name);
 			if(!Structure::register($dat[0])) throw new \ErrorException('invalid structure');
-			ClipStore::set($player, $dat[0]);
 			return true;
 		}
 		$dat[0]->resize($v);

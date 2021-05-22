@@ -14,28 +14,24 @@ final class CreateSubCommand extends BaseSubCommand{
 		);
 	}
 
-	public function prepare():void{
+	protected function prepare():void{
 		$this->registerArgument(0, new RawStringArgument('structure_name'));
-		$this->registerArgument(1, new RawStringArgument('invalid'));
 	}
 
 	public function onRun(CommandSender $sender, string $command, array $args):void{
 		if(!$sender instanceof Player){
-			$sender->sendMessage(null, LanguageHolder::translation('command.exception.send_must_in_game'));
+			$sender->sendMessage(LanguageHolder::translation(null, 'command.exception.send_must_in_game'));
 			return;
 
 		}elseif(!isset($args['structure_name'])){
-			$sender->sendMessage(null, LanguageHolder::translation('command.exception.non_structure_name'));
+			$sender->sendMessage(LanguageHolder::translation($sender->getLocale(), 'command.exception.non_structure_name'));
 			return;
 
-		}elseif($args['structure_name'] === 'cancel'){
-
-
-		}elseif(isset($args['invalid'])){
-			$sender->sendMessage($sender->getLocale(), LanguageHolder::translation('command.exception.unknown_subcommand'));
+		}elseif($args['structure_name'] === 'cancel' or $args['structure_name'] === 'cancel'){
+			$sender->sendMessage(LanguageHolder::translation($sender->getLocale(), 'command.exception.invalid_structure_name'));
 			return;
 		}
 		CreatingStructurePool::register($sender, $args['structure_name']);
-		$sender->sendMessage($sender->getLocale(), LanguageHolder::translation('command.success.registered_structure_pool'));
+		$sender->sendMessage(LanguageHolder::translation($sender->getLocale(), 'command.success.registered_structure_pool'));
 	}
 }
