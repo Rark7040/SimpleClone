@@ -21,7 +21,7 @@ final class SaveSubCommand extends BaseSubCommand{
 			$sender->sendMessage(LanguageHolder::translation($sender->getLocale(), 'command.exception.no_selected_structure'));
 			return;
 		}
-		(ClipStore::get($name))->save();
+		ClipStore::get($name)->save();
 		$sender->sendMessage(LanguageHolder::translation($sender->getLocale(), 'save.success'));
 	}
 }
